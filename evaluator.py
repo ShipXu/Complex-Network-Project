@@ -199,51 +199,54 @@ def get_coreness_graph(dag):
 def evaluate(dag):
     return get_N(dag), get_M(dag), get_ave_k(dag), get_ave_C(dag), get_ave_L(dag)
 
-if __name__ == '__main__':
-    # 
-    # G = {
-    #     'a': list('bcdef'),
-    #     'b': list('ac'),
-    #     'c': list('abd'),
-    #     'd': list('ace'),
-    #     'e': list('ad'),
-    #     'f': list('a')
-    # }
+# test01 for a normal dag
+def test1():
+    G = {
+        'a': list('bcdef'),
+        'b': list('ac'),
+        'c': list('abd'),
+        'd': list('ace'),
+        'e': list('ad'),
+        'f': list('a')
+    }
 
-    # dag = Digraph()
-    # for u in G:
-    #     for v in G[u]:
-    #         dag.addEdge(u, v)
+    dag = Digraph()
+    for u in G:
+        for v in G[u]:
+            dag.addEdge(u, v)
 
-    # print(get_coreness_graph(dag))
-    # adj_v = dag.get_adj_v()
-    # adj_m = dag.get_adj_m()
+    print(get_coreness_graph(dag))
+    adj_v = dag.get_adj_v()
+    adj_m = dag.get_adj_m()
 
-    # print(adj_v)
-    # print(adj_m)
-    # print(_get_E_i(dag, 0))
-    # print(_get_Es(dag))
-    # print(_get_out_degrees(dag))
-    # print(_get_Cs(dag))
-    # print(_get_Ls(dag))
+    print(adj_v)
+    print(adj_m)
+    print(_get_E_i(dag, 0))
+    print(_get_Es(dag))
+    print(_get_out_degrees(dag))
+    print(_get_Cs(dag))
+    print(_get_Ls(dag))
 
-    # print(dag)
-    # print('N = {}'.format(get_N(dag)) )
-    # print('M = {}'.format(get_M(dag)) )
-    # print('<k> = {}'.format(get_ave_k(dag)) )
-    # print('C = {}'.format(get_ave_C(dag)))
-    # print('L = {}'.format(get_ave_L(dag)))
+    print(dag)
+    print('N = {}'.format(get_N(dag)) )
+    print('M = {}'.format(get_M(dag)) )
+    print('<k> = {}'.format(get_ave_k(dag)) )
+    print('C = {}'.format(get_ave_C(dag)))
+    print('L = {}'.format(get_ave_L(dag)))
 
-    model_classess = [InceptionResNetV2, InceptionV3, MobileNet, ResNet50, VGG16, VGG19, Xception, NASNet]
+# test 2: test for models
+def test2():
+    # model_classess = [InceptionResNetV2, InceptionV3, MobileNet, ResNet50, VGG16, VGG19, Xception, NASNet]
+    model_classess = [NASNet]
     for model_class in model_classess:
         model = model_class()
         dag = model_to_dag(model)
         
-        with open('result1.csv', mode='w+', newline='') as f:
-            data = [str(model_class.__name__)]
-            data.extend(evaluate(dag))
-            writer = csv.writer(f)
-            writer.writerow(data)
+        # with open('result1.csv', mode='w+', newline='') as f:
+        #     data = [str(model_class.__name__)]
+        #     data.extend(evaluate(dag))
+        #     writer = csv.writer(f)
+        #     writer.writerow(data)
 
         print('model name : {}'.format(model_class.__name__))
         print('N = {}'.format(get_N(dag)) )
@@ -252,5 +255,9 @@ if __name__ == '__main__':
         print('C = {}'.format(get_ave_C(dag)))
         print('L = {}'.format(get_ave_L(dag)))
         print('coreness = {}'.format(get_coreness_graph(dag)))
+
+if __name__ == '__main__':
+    test1()
+    test2()
 
 
