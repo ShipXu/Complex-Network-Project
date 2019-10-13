@@ -1,11 +1,24 @@
+import os
 import csv
 from nasbench import api
 from utils import Digraph
 from evaluator import get_N, get_M, get_ave_k, get_ave_C, get_ave_L, get_coreness_graph
 
+def if_exists(filepath):
+    return os.path.exists(filepath)
+
+def remove_files():
+    files = ['result2.csv']
+    for file in files:
+        if if_exists(file):
+            os.remove(file)
+
+remove_files()
+
 # Replace this string with the path to the downloaded nasbench.tfrecord before
 # executing.
 NASBENCH_TFRECORD = r'D:\data\nas\nasbench_only108.tfrecord'
+# NASBENCH_TFRECORD = '/home/shipxu/data/nasbench_only108.tfrecord'
 
 def construct_dag_frommatrix(matrix):
     length, width = matrix.shape
@@ -22,10 +35,11 @@ def construct_dag_frommatrix(matrix):
 if __name__ == '__main__':
     # Load the data from file (this will take some time)
     nasbench = api.NASBench(NASBENCH_TFRECORD)
-    num_records = 1
+    num_records = 10000
     count = 0
 
     adj_ms = []
+
     for unique_hash in nasbench.hash_iterator():
         if count >= num_records:
             break
@@ -46,10 +60,9 @@ if __name__ == '__main__':
         ave_l = get_ave_L(dag)
         coreness = get_coreness_graph(dag)
 
-        with open('result2.csv', mode='w+', newline='') as f:
+        with open('result2.csv', mode='a+', newline='') as f:
             data = [N, M, ave_k, ave_c, ave_l, coreness, acc, params]
             writer = csv.writer(f)
             writer.writerow(data)
 
         count += 1
-
