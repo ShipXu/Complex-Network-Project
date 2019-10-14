@@ -57,9 +57,9 @@ def model_to_dag(model):
     return dag
 
 if __name__ == '__main__':
-    # model = Lenet()
+    model = Lenet()
     # model = ResNet50()
-    model = MobileNet()
-    visualize_model(model, path='models_visualization/MobileNet.png')
+    # model = MobileNet()
+    visualize_model(model, path='models_visualization/LeNet.png')
     dag = model_to_dag(model)
     print(dag)
