@@ -1,3 +1,4 @@
+import os
 import csv
 import math
 import keras
@@ -5,7 +6,7 @@ import numpy as np
 from queue import Queue
 
 from utils import Digraph
-from model_reader import read_models, model_to_dag
+from model_processer import read_models, model_to_dag
 # from models.lenet import Lenet
 
 from models.inception_resnet_v2 import InceptionResNetV2
@@ -18,39 +19,21 @@ from models.vgg19 import VGG19
 from models.xception import Xception
 from models.nasnet import NASNet
 
+def remove_files():
+    files = ['result1.csv']
+    for file in files:
+        if if_exists(file):
+            os.remove(file)
 
-# def calculate_entropy(uf):
-#     counts = uf.get_counts()
-#     N = len(uf.id)
-#     result = sum([(ki / N) * (math.log(ki / N, 2)) for _, ki in counts.items() if ki > 0])
-#     return result
+def create_dirs():
+    dirs = ['models_visulization']
+    for dir in dirs:
+        if not if_exists(dir):
+            os.makedirs(dir)
 
-# def calculate_entropy_standard(uf):
-#     N = len(uf.id)
-#     return calculate_entropy(uf) / math.log(N, 2)
+create_dirs()
+remove_files()
 
-# def equal_layer(layer1, layer2):
-#     if layer1.__class__ != layer2.__class__:
-#         return False
-#     else:
-#         config1 = [value for key,value in layer1.get_config().items() if key != 'name']
-#         config2 = [value for key, value in layer2.get_config().items() if key != 'name']
-#         return config1 == config2 
-
-# def equal_degree(dag):
-#     def _equal_degree(layer1, layer2):
-#         return dag.in_degree(layer1) == dag.in_degree(layer2) and \
-#                dag.out_degree(layer1) == dag.out_degree(layer2)
-#     return _equal_degree
-
-# class EntropyEvaluator():
-#     def evaluate(self, model):
-#         dag = model_to_dag(model)
-#         type_uf = dag.union_dag(equals=equal_layer)
-#         en1 = calculate_entropy_standard(type_uf)
-#         degree_uf = dag.union_dag(equals=equal_degree(dag=dag))
-#         en2 = calculate_entropy_standard(degree_uf)
-#         return en1 ** 2 + en2 **2
 def get_N(dag):
     return len(dag)
 
@@ -241,12 +224,12 @@ def test2():
     for model_class in model_classess:
         model = model_class()
         dag = model_to_dag(model)
-        
-        # with open('result1.csv', mode='w+', newline='') as f:
-        #     data = [str(model_class.__name__)]
-        #     data.extend(evaluate(dag))
-        #     writer = csv.writer(f)
-        #     writer.writerow(data)
+
+        with open('result1.csv', mode='a+', newline='') as f:
+            data = [str(model_class.__name__)]
+            data.extend(evaluate(dag))
+            writer = csv.writer(f)
+            writer.writerow(data)
 
         print('model name : {}'.format(model_class.__name__))
         print('N = {}'.format(get_N(dag)) )

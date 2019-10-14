@@ -13,6 +13,13 @@ def remove_files():
         if if_exists(file):
             os.remove(file)
 
+def create_dirs():
+    dirs = ['models_visulization']
+    for dir in dirs:
+        if not if_exists(dir):
+            os.makedirs(dir)
+
+create_dirs()
 remove_files()
 
 # Replace this string with the path to the downloaded nasbench.tfrecord before

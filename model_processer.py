@@ -1,5 +1,12 @@
 from utils import Node
 from utils import Digraph
+from keras.utils import plot_model
+from models.lenet import Lenet
+from models.resnet50 import ResNet50
+from models.mobilenet import MobileNet
+
+def visualize_model(model, path='models_visualization/model.png'):
+    plot_model(model, to_file=path)
 
 def read_models(model):
     top_tensors = {}
@@ -8,28 +15,28 @@ def read_models(model):
     for layer in model.layers:
         layer_map[layer.name] = layer
         for i in range(len(layer._inbound_nodes)):
-            outNode = layer.get_output_at(i)
-            if not isinstance(outNode, list):
-                if outNode not in top_tensors:
-                    top_tensors[outNode] = [layer]
+            outTensor = layer.get_output_at(i)
+            if not isinstance(outTensor, list):
+                if outTensor not in top_tensors:
+                    top_tensors[outTensor] = [layer]
                 else:
-                    top_tensors[outNode].append(layer)
+                    top_tensors[outTensor].append(layer)
             else:
-                for tensor in outNode:
+                for tensor in outTensor:
                     if tensor not in top_tensors:
                         top_tensors[tensor] = [layer]
                     else:
                         top_tensors[tensor].append(layer)
 
         for i in range(len(layer._inbound_nodes)):
-            inNode = layer.get_input_at(i)
-            if not isinstance(inNode, list):
-                if inNode not in bottom_tensors:
-                    bottom_tensors[inNode] = [layer]
+            inTensor = layer.get_input_at(i)
+            if not isinstance(inTensor, list):
+                if inTensor not in bottom_tensors:
+                    bottom_tensors[inTensor] = [layer]
                 else:
-                    bottom_tensors[inNode].append(layer)
+                    bottom_tensors[inTensor].append(layer)
             else:
-                for tensor in inNode:
+                for tensor in inTensor:
                     if tensor not in bottom_tensors:
                         bottom_tensors[tensor] = [layer]
                     else:
@@ -48,3 +55,11 @@ def model_to_dag(model):
                         top_node = Node(top_layer.name, top_layer)
                         dag.addEdge(from_node, top_node)
     return dag
+
+if __name__ == '__main__':
+    # model = Lenet()
+    # model = ResNet50()
+    model = MobileNet()
+    visualize_model(model, path='models_visualization/MobileNet.png')
+    dag = model_to_dag(model)
+    print(dag)

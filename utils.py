@@ -54,8 +54,6 @@ class Union_Find(object):
 class Digraph(object):
     def __init__(self):
         self.nodes = []
-        # self.out_degrees = []
-        # self.in_degrees = []
         self.nodes_indexes = {}
         self.adj = []
 
@@ -66,16 +64,12 @@ class Digraph(object):
         if not self.containsNode(node):
             self.nodes.append(node)
             self.adj.append(list())
-            # self.out_degrees.append(0)
-            # self.in_degrees.append(0)
             self.nodes_indexes[node] = len(self.nodes) - 1
 
         return self.nodes_indexes[node]
 
     def _addEdge(self, from_index, to_index):
         self.adj[from_index].append(to_index)
-        # self.out_degrees[from_index] += 1
-        # self.in_degrees[to_index] += 1
 
     def addEdge(self, from_node, to_node):
         from_index = self.addNode(from_node)
@@ -104,7 +98,7 @@ class Digraph(object):
         return adj_k
 
     def __str__(self):
-        ret = ('------------------NFA desciption------------\n'               +
+        ret = ('------------------DAG desciption------------\n'               +
                 'dag.adj : {}'.format(str(self.adj))                          + '\n')
 
         ret += 'dag.nodes_indexes:\n{\n'
