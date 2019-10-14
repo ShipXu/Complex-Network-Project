@@ -4,6 +4,7 @@ from keras.utils import plot_model
 from models.lenet import Lenet
 from models.resnet50 import ResNet50
 from models.mobilenet import MobileNet
+from models.nasnet import NASNet
 
 def visualize_model(model, path='models_visualization/model.png'):
     plot_model(model, to_file=path)
@@ -57,9 +58,10 @@ def model_to_dag(model):
     return dag
 
 if __name__ == '__main__':
-    model = Lenet()
+    # model = Lenet()
     # model = ResNet50()
     # model = MobileNet()
-    visualize_model(model, path='models_visualization/LeNet.png')
+    model = NASNet()
+    visualize_model(model, path='models_visualization/NASNet.png')
     dag = model_to_dag(model)
     print(dag)
